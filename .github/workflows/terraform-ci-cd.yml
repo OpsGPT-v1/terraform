@@ -226,10 +226,14 @@ jobs:
           retention-days: 5   # Plans older than 5 days are stale
 
       - name: Send Slack Plan Notification
-        if: always() && secrets.TERRAFORM_NOTIFICATION != ''
+        if: always()
         env:
           SLACK_WEBHOOK: ${{ secrets.TERRAFORM_NOTIFICATION }}
         run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "Slack Webhook URL is empty. Skipping notification."
+            exit 0
+          fi
           STATUS="${{ job.status }}"
           ADD="${{ steps.counts.outputs.add }}"
           CHG="${{ steps.counts.outputs.change }}"
@@ -381,10 +385,14 @@ jobs:
           EOF
 
       - name: Send Slack Apply Notification
-        if: always() && secrets.TERRAFORM_NOTIFICATION != ''
+        if: always()
         env:
           SLACK_WEBHOOK: ${{ secrets.TERRAFORM_NOTIFICATION }}
         run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "Slack Webhook URL is empty. Skipping notification."
+            exit 0
+          fi
           STATUS="${{ steps.apply.outcome }}"
           if [ "$STATUS" = "success" ]; then
             COLOR="#00FF00"
