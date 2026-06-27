@@ -7,7 +7,7 @@ This directory contains the highly modular, secure, and production-grade Infrast
 ## Architecture Overview
 
 All resources are provisioned inside the pre-existing `Aasik-OpsGPT` resource group in the **West Europe** (`westeurope`) region to leverage available vCPU and VM capacity. The network topology is completely private, ensuring that no database, key vault, or container metrics are exposed to the public internet.
-
+#
 ```mermaid
 graph TD
     Client((Client)) -->|Port 80| AppGW[Application Gateway WAF_v2]
