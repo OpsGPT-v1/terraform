@@ -112,12 +112,12 @@ module "storage" {
   ai_deployment_name           = var.ai_deployment_name
   ai_private_dns_zone_name     = var.ai_private_dns_zone_name
   ai_pe_name                   = var.ai_pe_name
-#   service_bus_name             = var.service_bus_name
-#   sb_queue_name                = var.sb_queue_name
-#   sb_private_dns_zone_name     = var.sb_private_dns_zone_name
-#   sb_pe_name                   = var.sb_pe_name
-  action_group_name            = var.action_group_name
-  action_group_short_name      = var.action_group_short_name
+  #   service_bus_name             = var.service_bus_name
+  #   sb_queue_name                = var.sb_queue_name
+  #   sb_private_dns_zone_name     = var.sb_private_dns_zone_name
+  #   sb_pe_name                   = var.sb_pe_name
+  action_group_name       = var.action_group_name
+  action_group_short_name = var.action_group_short_name
 }
 
 # 4. AKS Cluster Module
