@@ -31,18 +31,23 @@ output "ai_foundry_endpoint" {
   description = "The endpoint of the AI Foundry account."
 }
 
-output "service_bus_namespace" {
-  value       = azurerm_servicebus_namespace.sb.name
-  description = "The name of the Service Bus namespace."
-}
-
-output "service_bus_queue" {
-  value       = azurerm_servicebus_queue.sb_queue.name
-  description = "The name of the Service Bus queue."
-}
+# output "service_bus_namespace" {
+#   value       = azurerm_servicebus_namespace.sb.name
+#   description = "The name of the Service Bus namespace."
+# }
+# 
+# output "service_bus_queue" {
+#   value       = azurerm_servicebus_queue.sb_queue.name
+#   description = "The name of the Service Bus queue."
+# }
 
 
 output "action_group_id" {
   value       = azurerm_monitor_action_group.slack_alerts.id
   description = "The ID of the Monitor Action Group."
+}
+
+output "grafana_endpoint" {
+  value       = azurerm_dashboard_grafana.grafana.endpoint
+  description = "The endpoint URL of the Azure Managed Grafana workspace."
 }

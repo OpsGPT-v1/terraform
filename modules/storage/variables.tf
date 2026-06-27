@@ -87,25 +87,25 @@ variable "ai_pe_name" {
   description = "The name of the AI Private Endpoint."
 }
 
-variable "service_bus_name" {
-  type        = string
-  description = "The name of the Service Bus namespace."
-}
-
-variable "sb_queue_name" {
-  type        = string
-  description = "The name of the Service Bus queue."
-}
-
-variable "sb_private_dns_zone_name" {
-  type        = string
-  description = "The Private DNS Zone name for Service Bus."
-}
-
-variable "sb_pe_name" {
-  type        = string
-  description = "The name of the Service Bus Private Endpoint."
-}
+# variable "service_bus_name" {
+#   type        = string
+#   description = "The name of the Service Bus namespace."
+# }
+# 
+# variable "sb_queue_name" {
+#   type        = string
+#   description = "The name of the Service Bus queue."
+# }
+# 
+# variable "sb_private_dns_zone_name" {
+#   type        = string
+#   description = "The Private DNS Zone name for Service Bus."
+# }
+# 
+# variable "sb_pe_name" {
+#   type        = string
+#   description = "The name of the Service Bus Private Endpoint."
+# }
 
 variable "action_group_name" {
   type        = string

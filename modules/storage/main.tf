@@ -153,58 +153,58 @@ resource "azurerm_private_endpoint" "ai_pe" {
 }
 
 # --- Azure Service Bus Namespace & Queue (Private) ---
-resource "azurerm_servicebus_namespace" "sb" {
-  name                         = var.service_bus_name
-  location                     = var.location
-  resource_group_name          = var.resource_group_name
-  sku                          = "Premium" # Premium required for Private Endpoint support
-  capacity                     = 1
-  premium_messaging_partitions = 1
-  tags                         = var.tags
-}
-
-resource "azurerm_servicebus_queue" "sb_queue" {
-  name         = var.sb_queue_name
-  namespace_id = azurerm_servicebus_namespace.sb.id
-}
-
-# Service Bus Private DNS Zone & Link
-resource "azurerm_private_dns_zone" "sb_dns" {
-  name                = var.sb_private_dns_zone_name
-  resource_group_name = var.resource_group_name
-  tags                = var.tags
-}
-
-# Link
-resource "azurerm_private_dns_zone_virtual_network_link" "sb_dns_link" {
-  name                  = "sb-dns-link"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.sb_dns.name
-  virtual_network_id    = var.vnet_id
-  tags                  = var.tags
-}
-
-# Service Bus Private Endpoint
-resource "azurerm_private_endpoint" "sb_pe" {
-  name                = var.sb_pe_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = var.pe_subnet_id
-
-  private_service_connection {
-    name                           = "sb-privatelink"
-    private_connection_resource_id = azurerm_servicebus_namespace.sb.id
-    is_manual_connection           = false
-    subresource_names              = ["namespace"]
-  }
-
-  private_dns_zone_group {
-    name                 = "sb-dns-group"
-    private_dns_zone_ids = [azurerm_private_dns_zone.sb_dns.id]
-  }
-
-  tags = var.tags
-}
+# resource "azurerm_servicebus_namespace" "sb" {
+#   name                         = var.service_bus_name
+#   location                     = var.location
+#   resource_group_name          = var.resource_group_name
+#   sku                          = "Premium" # Premium required for Private Endpoint support
+#   capacity                     = 1
+#   premium_messaging_partitions = 1
+#   tags                         = var.tags
+# }
+# 
+# resource "azurerm_servicebus_queue" "sb_queue" {
+#   name         = var.sb_queue_name
+#   namespace_id = azurerm_servicebus_namespace.sb.id
+# }
+# 
+# # Service Bus Private DNS Zone & Link
+# resource "azurerm_private_dns_zone" "sb_dns" {
+#   name                = var.sb_private_dns_zone_name
+#   resource_group_name = var.resource_group_name
+#   tags                = var.tags
+# }
+# 
+# # Link
+# resource "azurerm_private_dns_zone_virtual_network_link" "sb_dns_link" {
+#   name                  = "sb-dns-link"
+#   resource_group_name   = var.resource_group_name
+#   private_dns_zone_name = azurerm_private_dns_zone.sb_dns.name
+#   virtual_network_id    = var.vnet_id
+#   tags                  = var.tags
+# }
+# 
+# # Service Bus Private Endpoint
+# resource "azurerm_private_endpoint" "sb_pe" {
+#   name                = var.sb_pe_name
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
+#   subnet_id           = var.pe_subnet_id
+# 
+#   private_service_connection {
+#     name                           = "sb-privatelink"
+#     private_connection_resource_id = azurerm_servicebus_namespace.sb.id
+#     is_manual_connection           = false
+#     subresource_names              = ["namespace"]
+#   }
+# 
+#   private_dns_zone_group {
+#     name                 = "sb-dns-group"
+#     private_dns_zone_ids = [azurerm_private_dns_zone.sb_dns.id]
+#   }
+# 
+#   tags = var.tags
+# }
 
 # --- Monitor Action Group for Slack alerts ---
 resource "azurerm_monitor_action_group" "slack_alerts" {
@@ -219,4 +219,27 @@ resource "azurerm_monitor_action_group" "slack_alerts" {
   }
 
   tags = var.tags
+}
+
+# --- Azure Managed Grafana Workspace ---
+resource "azurerm_dashboard_grafana" "grafana" {
+  name                          = "opsgpt-grafana-aasik"
+  resource_group_name           = var.resource_group_name
+  location                      = var.location
+  api_key_enabled               = true
+  public_network_access_enabled = true
+  grafana_major_version         = "12"
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = var.tags
+}
+
+# Role Assignment: Grafana pulls metrics from Managed Prometheus Workspace
+resource "azurerm_role_assignment" "grafana_prometheus_reader" {
+  scope                = azurerm_monitor_workspace.amw.id
+  role_definition_name = "Monitoring Data Reader"
+  principal_id         = azurerm_dashboard_grafana.grafana.identity[0].principal_id
 }

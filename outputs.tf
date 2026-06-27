@@ -58,17 +58,22 @@ output "ai_foundry_endpoint" {
   description = "The endpoint URL of the AI Foundry (Cognitive) resource."
 }
 
-output "service_bus_namespace" {
-  value       = module.storage.service_bus_namespace
-  description = "The name of the Service Bus namespace."
-}
-
-output "service_bus_queue" {
-  value       = module.storage.service_bus_queue
-  description = "The name of the Service Bus queue."
-}
+# output "service_bus_namespace" {
+#   value       = module.storage.service_bus_namespace
+#   description = "The name of the Service Bus namespace."
+# }
+# 
+# output "service_bus_queue" {
+#   value       = module.storage.service_bus_queue
+#   description = "The name of the Service Bus queue."
+# }
 
 output "action_group_id" {
   value       = module.storage.action_group_id
   description = "The ID of the Monitor Action Group for Slack alerts."
+}
+
+output "grafana_endpoint" {
+  value       = module.storage.grafana_endpoint
+  description = "The endpoint URL of the Azure Managed Grafana workspace."
 }
